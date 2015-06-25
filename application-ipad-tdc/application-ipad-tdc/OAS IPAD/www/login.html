@@ -1,0 +1,293 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+    <HEAD>
+        <TITLE> Presentation Canvas </TITLE>
+        <META NAME="Generator" CONTENT="Microsoft FrontPage 4.0">
+            <META NAME="Author" CONTENT="">
+                <META NAME="Keywords" CONTENT="">
+                    <META NAME="Description" CONTENT="">
+                        <meta http-equiv="X-UA-Compatible" content="chrome=1">
+                            <meta name="viewport" content="width=device-width, initial-scale=1.28, maximum-scale=1.28, user-scalable=no">
+                                
+                                <script type="text/javascript" src="lps/jquery-1.10.2.js"></script>
+								<script type="text/javascript" src="lps/jquery-ui-1.10.4.js"></script>
+                                <script type="text/javascript" src="lps/jquery.ui.touch-punch.js"></script>
+                                
+                                
+                                <script type="text/javascript" src="lps/includes/embed-compressed.js"></script>
+                                <link rel="stylesheet" href="lps/style_mozilla.css" type="text/css" /> 
+								<!--  <script type="text/javascript"src="lps/jquery.min.js"></script>
+								<script type="text/javascript" src="lps/jquery.magnifier.js"></script>
+                                <script type="text/javascript"src="lps/jquery-1.7.2.min.js"></script>-->
+								<script type="text/javascript" src="lps/jquery.magnifier.js"></script>
+								<script type="text/javascript" src="lps/jquery.blockUI.js"></script>
+								<script type="text/javascript" src="lps/jquery.blockGuidedAccess.js"></script>
+								<script type="text/javascript" src="lps/util.js"></script>
+                                
+																
+								<!--  TI 30 calculator related files-->
+							    <link rel="stylesheet" href="calc://TI-30/css/jquery-ui-TI30.css" rel="Stylesheet" type="text/css" onload="scriptLoaded=true; checkScriptLoaded()"/>
+							  	<link href="calc://TI-30/css/ti30mv-styles-min.css" media="screen" rel="Stylesheet" type="text/css" onload="scriptLoaded=true; checkScriptLoaded()"/>
+							    <link rel="stylesheet" href="calc://TI-30/css/style.css" rel="Stylesheet" type="text/css" onload="scriptLoaded=true; checkScriptLoaded()"/>
+								<script type="text/javascript" src="calc://TI-30/js/ti30mv-min.js" onload="scriptLoaded=true; checkScriptLoaded()"></script>
+	
+								<!--  TI 84 calculator related files-->
+								<link rel="stylesheet" href="calc://TI-84/css/jquery-ui-TI84.css" rel="Stylesheet" type="text/css" onload="scriptLoaded=true; checkScriptLoaded()"/>
+								<link href="calc://TI-84/css/ti84p-styles-min.css" media="screen" rel="Stylesheet" type="text/css" onload="scriptLoaded=true; checkScriptLoaded()"/>
+							    <link rel="stylesheet" href="calc://TI-84/css/styleTI84.css" rel="Stylesheet" type="text/css" onload="scriptLoaded=true; checkScriptLoaded()"/>
+								<script type="text/javascript" src="calc://TI-84/js/ti84p-min.js" onload="scriptLoaded=true; checkScriptLoaded()"></script>
+                                                                                          
+                                <script type="text/javascript" charset="utf-8" src="cordova-1.8.1.js"></script>
+                                <script type="text/javascript" charset="utf-8" src="DelegatePlugin.js"></script>
+                                
+                                <!--[if lt IE 9]><script type="text/javascript" src="lps/includes/excanvas.js"></script><![endif] -->
+                                <SCRIPT SRC="includes/embed.js" type="text/javascript"></SCRIPT>
+                                <style title="mystyle" type="text/css" rel="stylesheet">
+                                    html, body
+                                    {
+                                        /* http://www.quirksmode.org/css/100percheight.html */
+                                        height: 100%;
+                                        /* prevent browser decorations */
+                                        margin: 0;
+                                        padding: 0;
+                                        border: 0 none;
+                                        /*text-rendering:optimizeLegibility;*/
+                                        font-family: CTB;
+                                    }
+                                    body {
+                                        background-color: #6691b4;
+                                        -webkit-font-smoothing: antialiased;
+										/* -moz-font-smoothing: antialiased; - No longer available in FF */
+										font-smoothing: antialiased;
+                                    }
+                                    img { border: 0 none; }
+                                    
+                                    @font-face {
+									    font-family: "CTB";
+									    src: url("ctbmodules/resources/fonts/OASmathv3.ttf");
+									}
+									@font-face {
+									    font-family: "CTB";
+									    src: url("ctbmodules/resources/fonts/OASmathv3 Bold.ttf");
+									    font-weight: bold;
+									}
+									@font-face {
+									    font-family: "CTB";
+									    src: url("ctbmodules/resources/fonts/OASmathv3 Italic.ttf");
+									    font-style: italic;
+									}
+									@font-face {
+									    font-family: "CTB";
+									    src: url("ctbmodules/resources/fonts/OASmathv3 BoldItalic.ttf");
+									    font-weight: bold;
+									    font-style: italic;
+									}
+                                    </style>
+										
+   			<style>
+                .no-close .ui-dialog-titlebar-close {display: none;}
+            </style>
+            <style>
+                .meter {
+                    height: 20px;
+                    width: 300px;
+                    position: relative;
+                    border-radius:8px;
+                   -webkit-box-shadow: inset 0 -1px 1px rgba(255,255,255,0.3);
+                   box-shadow        : inset 0 -1px 1px rgba(255,255,255,0.3);
+                   background:#e3e3e3;
+                   -webkit-user-select:none;
+                   -webkit-touch-callout:none;
+                   
+                }
+            .meter > span {
+                display: block;
+                height: 100%;
+                border-radius:9px;
+                background-color: rgb(43,194,83);
+                background-image: -webkit-gradient(
+                linear,
+                left bottom,
+                left top,
+                color-stop(0, rgb(14, 165, 177)),
+                color-stop(1, rgb(84, 193, 240))
+                );
+                background-image: -moz-linear-gradient(
+                center bottom,
+                rgb(43,194,83) 37%,
+                rgb(84,240,84) 69%
+                );
+                -webkit-box-shadow:
+                inset 0 2px 9px  rgba(255,255,255,0.3),
+                inset 0 -2px 6px rgba(0,0,0,0.4);
+                box-shadow:
+                inset 0 2px 9px  rgba(255,255,255,0.3),
+                inset 0 -2px 6px rgba(0,0,0,0.4);
+                position: relative;
+                overflow: hidden;
+            }
+            .meter > span:after, .animate > span > span {
+                content: "";
+                position: absolute;
+                top: 0; left: 0; bottom: 0; right: 0;
+                background-image:
+                -webkit-gradient(linear, 0 0, 100% 100%,
+                color-stop(.25, rgba(255, 255, 255, .2)),
+                color-stop(.25, transparent), color-stop(.5, transparent),
+                color-stop(.5, rgba(255, 255, 255, .2)),
+                color-stop(.75, rgba(255, 255, 255, .2)),
+                color-stop(.75, transparent), to(transparent)
+                );
+                background-image:
+				-moz-linear-gradient(
+                -45deg,
+                rgba(255, 255, 255, .2) 25%,
+                transparent 25%,
+                transparent 50%,
+                rgba(255, 255, 255, .2) 50%,
+                rgba(255, 255, 255, .2) 75%,
+                transparent 75%,
+                transparent
+                );
+                z-index: 1;
+                -webkit-background-size: 50px 50px;
+                -webkit-border-top-right-radius: 8px;
+                -webkit-border-bottom-right-radius: 8px;
+                 overflow: hidden;
+                border-radius:20px;
+            }
+            
+            .animate > span:after {
+                display: none;
+            }
+            
+            @-webkit-keyframes move {
+                0% {
+                    background-position: 0 0;
+                }
+                100% {
+                    background-position: 50px 50px;
+                }
+            }
+            
+            
+            
+            .nostripes > span > span, .nostripes > span:after {
+                -webkit-animation: none;
+                background-image: none;
+            }
+            </style>
+            <style type="text/css">
+                    .demo-wrapper {
+                        width: 320px;
+                        margin: 0 0 0 -38%;
+                        z-index: 1001;
+                    }
+                .html5-progress-bar {
+                    padding: 15px 15px;
+                    border-radius: 3px;
+                    background-color: #fff;
+                    box-shadow:  0px 1px 2px 0px rgba(0, 0, 0, .2);
+                }
+        
+            .html5-progress-bar .progress-value {
+                line-height: 20px;
+                font-size: .8em;
+                color: #555;
+                height: 18px;
+                background-image:none!important;
+                z-index:1002;
+            }
+            
+           
+            
+            progress[value] {
+                /* Reset the default appearance */
+                -webkit-appearance: none;
+                appearance: none;
+                
+                width: 250px;
+                height: 20px;
+            }
+            
+            progress[value]::-webkit-progress-bar {
+                background-color: #eee;
+                border-radius: 2px;
+                box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25) inset;
+            }
+            
+            progress[value]::-webkit-progress-value {
+                background-image:
+                -webkit-linear-gradient(-45deg,
+                transparent 33%, rgba(0, 0, 0, .1) 33%,
+                rgba(0,0, 0, .1) 66%, transparent 66%),
+                -webkit-linear-gradient(top,
+                rgba(255, 255, 255, .25),
+                rgba(0, 0, 0, .25)),
+                -webkit-linear-gradient(left, #09c, #6de);
+                -webkit-animation: animate-stripes 5s linear infinite;
+                animation: animate-stripes 5s linear infinite;
+                
+                border-radius: 2px;
+                background-size: 35px 20px, 100% 100%, 100% 100%;
+            }
+            
+            @-webkit-keyframes animate-stripes {
+                100% { background-position: -100px 0px; }
+            }
+            
+            @keyframes animate-stripes {
+                100% { background-position: -100px 0px; }
+            }
+            
+            .progress-bar-wrapper{
+                margin-left:10px;
+            }
+            
+            </style>
+
+                                
+</HEAD>
+
+<BODY topmargin=0 leftmargin=0 rightmargin=0 bottommargin=0 scroll=no bgcolor="#6691B4" >
+
+<button id="mybutton" style="visibility:hidden; width:0px; height:0px;">clickMe </button>
+
+<div id="lzsplash" style="z-index: 10000000; top: 0; left: 0; width: 100%; height: 100%; position: fixed; display: table">
+<p style="display: table-cell; vertical-align: middle;"></p></div>
+<!-- generating TI calculators div start-->
+<div id="calculatorDiv" tabindex="0" class = "calculatorDiv" title="TI30 Calculator" style="display: none;width: inherit;">
+	 <div class="displayDiv" id="displayDiv">
+         <canvas id="display" class="display" width="200" height="75"> </canvas>
+     </div>
+ </div> 
+ 
+ <div id="calculatorTI84Div" class="calculatorTI84Div" tabindex="0" title="TI84 Calculator" style="display: none;width: inherit;">
+ 		<div class="displayTI84Div" id="displayTI84Div">
+			<canvas id="displayTI84" class="displayTI84" width="290" height="190"> </canvas>
+		</div>
+	</div>
+<!-- generating TI calculators div end-->
+<div id="appcontainer">
+			<script type="text/javascript" defer>
+                  //lz.embed.dhtml({url: 'TestClient.lzx.js?folder=calif&servletUrl=http://192.168.15.33:12345/servlet/fixed', lfcurl: 'lps/includes/lfc/LFCdhtml.js', serverroot: 'lps/resources/', bgcolor: '#6691b4', width: '400px', height: '400px', id: 'lzapp', accessible: 'true', cancelmousewheel: false, cancelkeyboardcontrol: false, skipchromeinstall: false, usemastersprite: false, approot: '', appenddivid: 'appcontainer'});
+                  lz.embed.dhtml({url: 'TestClient.lzx.js?servletUrl=/servlet', lfcurl: 'lps/includes/lfc/LFCdhtml.js', serverroot: 'lps/resources/', bgcolor: '#6691b4', width: '100%', height: '600', id: 'lzapp', accessible: 'true', cancelmousewheel: false, cancelkeyboardcontrol: false, skipchromeinstall: false, usemastersprite: false, approot: '', appenddivid: 'appcontainer'});
+                  lz.embed.applications.lzapp.onload = function loaded() {
+                    // called when this application is done loading
+                    var el = document.getElementById('lzsplash');
+                    if (el.parentNode) {
+                        el.parentNode.removeChild(el);
+                    }
+                    // checking for TI calculator files
+                    setTimeout(function(){ checkScriptLoaded();
+                               },3000);
+                    
+                  }
+                </script>
+            <noscript>
+                Please enable JavaScript in order to use this application.
+            </noscript>
+        </div>
+	<OBJECT ID="LDBJSBridgeCTL" CLASSID="CLSID:56871AC2-4683-4D8E-B5EB-E7E3AA40DD52" VIEWASTEXT WIDTH=0 HEIGHT = 0></OBJECT>
+</BODY>
+</HTML>

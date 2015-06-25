@@ -1,0 +1,296 @@
+<library>
+
+    <include href="ManipulativeButton.lzx"/>
+    <include href="base/baseslider.lzx"/>
+    <include href="lz/slider.lzx"/>
+   <include href="ScratchpadButton.lzx"/>
+	<include href="radioButton/radio.lzx"/>
+	<include href="volume_slider/vslider.lzx"/>
+
+    <class name="ManipulativeBar" bgcolor="0x6691B4"
+           datapath="dsstudentdata:/testing_client_model/current_item/item_model">
+
+		<attribute name="TYPE_SPACING" type="number" value="15" />
+		<attribute name="theme" type="boolean" value="$path{'@theme'}" />
+		<attribute name="hasResponseArea" type="boolean" value="true" />
+		<attribute name="hasMagnifyingGlass"  value="$path{'manipulatives/global/@magnifying_glass'}" />
+		<attribute name="speedSelected"/>
+		<attribute name="selectedSpeedVal" type="string" value="M"/>
+		
+		<simplelayout axis="x"></simplelayout>
+
+		<handler name="ondata" args="data">
+			if(theme) {
+				this.setAttribute("hasResponseArea", gController.applyManipulative());
+			}
+			this.globals.magnifyingGlassContainer.magnifyingGlass.setAttribute('frame', 1);
+			this.setAttribute('speedSelected',this.selectedSpeedVal);
+		</handler>
+		
+		<view datapath="manipulatives/global" name="globals" valign="middle" visible="${!classroot.theme || (classroot.theme &amp;&amp; classroot.hasResponseArea)}">
+			<handler name="oninit">
+				var elm = this.getDisplayObject();
+				elm.setAttribute('id','globalManip');
+				disableCopyPaste(elm.id);
+			</handler>
+			<handler name="ondata" args="data">
+			//Debug.write("On data global",data);
+			</handler>
+			<simplelayout axis="x"/>
+			<ManipulativeButton btnResource="toolbar_choice_eliminator_btn"
+	                            toolid="option_eliminator"/>
+			<ManipulativeButton btnResource="toolbar_highlighter_btn"
+	                            toolid="highlighter"/>
+			<ManipulativeButton btnResource="toolbar_eraser_btn"
+	                            toolid="eraser"/>
+	        <ScratchpadButton   btnResource="toolbar_scratchpad_btn"
+	                            toolid="scratchpad"/>
+			<ManipulativeButton btnResource="toolbar_masking_ruler_btn"
+	                            toolid="masking_ruler"/>	
+	                            
+			<!-- Magnifier Glass Button -->
+			<attribute name="magnifierOpen" type="boolean" value="false"/>
+			<view name="magnifyingGlassContainer">
+				<view name="magnifyingGlass"
+					visible="${gController.magnifierVisible}"
+					resource="toolbar_magnifying_glass_btn" valign="middle" 
+					stretches="both" height="40" width="37">
+					
+					<attribute name="isEnabled" value="false" />
+					<attribute name="isSelected" value="false" />
+					
+					<handler name="onmouseover">
+							this.setAttribute('frame',2);
+						</handler>
+	
+					<handler name="onmouseout">
+							if(!this.isEnabled) {
+								this.setAttribute('frame',1);
+							}   
+						</handler>
+	
+					<handler name="onclick">
+							if(gMagnifyingGlass.magnifierOpen==true || gMagnifyingGlass.magnifierOpen=='true' || gMagnifyingGlass.magnifierOpen=="true"){
+								show();
+							} else {
+								hide();
+							}
+							
+						</handler>
+	
+					<method name="setup">
+							gMagnifyingGlass.setUpGlass();
+							this.isEnabled = true;
+							gController.setAttribute("magnifierState", true);
+							//show();
+						</method>
+	
+					<method name="show">
+							gMagnifyingGlass.showGlass("F");
+							isTICalculatorOpen();
+							this.isEnabled = true;
+							gController.setAttribute("magnifierState", true);
+							this.setAttribute('frame',2);
+						</method>
+	
+					<method name="hide">
+							gMagnifyingGlass.hideGlass();
+							this.isEnabled = false;
+							gController.setAttribute("magnifierState", false);
+							this.setAttribute('frame',1);
+						</method>
+					<handler name="onvisible">
+						parent.magnifier_btn_shadow.sendToBack();
+						//this.bringToFront();
+					</handler>
+				</view>
+				<view name="magnifier_btn_shadow" tintcolor="0x000000" resource="qButtonShadow" x="6"
+	        	  opacity="0.5" visible="${gController.magnifierVisible}"
+	        	  width="37" height="43" stretches="both">
+				</view>
+	                            	
+		         <view name="gap1" x="${parent.magnifyingGlass.x+parent.magnifyingGlass.width}" width="16" valign="middle" visible="${gController.magnifierVisible}"/>    
+			</view>        
+	         
+			<view name="maskingAnswerContainer">                   
+		         <view name="maskingAnswer"
+					visible="${gController.showMaskingAnswerPopUp}"
+					resource="toolbar_msaking_choice_btn" valign="middle" 
+					stretches="both" height="40" width="37">
+					<attribute name="isEnabled" value="false" />
+					<attribute name="isSelected" value="false" />
+
+					<handler name="onmouseover">
+							this.setAttribute('frame',2);
+						</handler>
+	
+					<handler name="onmouseout">
+							if(!this.isEnabled) {
+								this.setAttribute('frame',1);
+							}   
+						</handler>
+	
+					<handler name="onclick">
+						Debug.write("onclick masking answer x" , this.x, gManipulatives.y, gManipulativeBar.x);
+							if(gMaskingAnswer.visible){
+								hide();
+							} else {
+								show();
+							}
+						</handler>
+	
+					<method name="show">
+							gMaskingAnswer.showPopUp();
+							this.isEnabled = true;
+							gController.setAttribute("maskingAnswerDDState", true);
+							this.setAttribute('frame',2);
+						</method>
+	
+					<method name="hide">
+							gMaskingAnswer.hidePopUp();
+							this.isEnabled = false;
+							gController.setAttribute("maskingAnswerDDState", false);
+							this.setAttribute('frame',1);
+						</method>
+					<handler name="onvisible">
+						if(this.visible){
+							parent.maskingAnswer_btn_shadow.sendToBack();
+						}
+					</handler>
+				</view>   
+				<view name="maskingAnswer_btn_shadow" tintcolor="0x000000" resource="qButtonShadow" x="6"
+	        	  opacity="0.5" visible="${parent.maskingAnswer.visible}"
+	        	  width="37" height="43" stretches="both"/>
+	   
+				<view name="gap2" x="${parent.maskingAnswer.x+parent.maskingAnswer.width}" width="16" valign="middle" visible="${parent.maskingAnswer.visible}"/>       
+			</view>      
+	    </view>       
+		<view datapath="manipulatives/general" name="generals" valign="middle"
+		      visible="${!classroot.theme  || (classroot.theme &amp;&amp; classroot.hasResponseArea)}">
+		     <handler name="oninit">
+		     	var elm = this.getDisplayObject();
+		     	elm.setAttribute('id','generalManip');
+		     	disableCopyPaste(elm.id);
+		     </handler>
+		    <simplelayout axis="x"/>
+			<ManipulativeButton btnResource="toolbar_oneeighth_inch_ruler_btn"
+	                            toolid="oneeighth_inch_ruler"/>
+			<ManipulativeButton btnResource="toolbar_half_inch_ruler_btn"
+	                            toolid="half_inch_ruler"/>
+			<ManipulativeButton btnResource="toolbar_mm_ruler_btn"
+	                            toolid="mm_ruler"/>
+			<ManipulativeButton btnResource="toolbar_cm_ruler_btn"
+	                            toolid="cm_ruler"/>
+			<ManipulativeButton btnResource="toolbar_protractor_btn"
+	                            toolid="protractor"/>
+			<ManipulativeButton btnResource="toolbar_formula_card_btn"
+	                            toolid="FCAT_formula_card"/>
+			<ManipulativeButton btnResource="toolbar_formula_card_btn"
+	                            toolid="TN_formula_card"/>
+			<ManipulativeButton btnResource="toolbar_formula_card_btn"
+	                            toolid="formula_card_resource"/>
+			<ManipulativeButton btnResource="toolbar_calculator_btn"
+	                            toolid="standard_calculator"/>
+			<ManipulativeButton btnResource="toolbar_straight_edge_btn"
+	                            toolid="straight_edge"/>
+		        <ManipulativeButton btnResource="toolbar_calculator_btn"
+		                            toolid="ti_scientific_calculator"/>
+			<ManipulativeButton btnResource="toolbar_calculator_btn"
+	                            toolid="ti_scientific_graphic_calculator"/>                    
+		</view>
+		
+		<view name="screenreader" valign="middle" height="100%" bgcolor="0x83A6C3">
+		<!-- <simplelayout axis="x" spacing="2"></simplelayout> -->
+			<!-- The tool to control the TTS volume -->
+			<view name="volumeController" height="60"
+				  visible="${parent.stopreader.visible}" y="${this.y-7}">
+						  
+				<simplelayout axis="y" spacing="2"/>
+					<text name="volumeText" fontsize="9" height="10" fontstyle="bold">Volume</text>
+					<vslider id="volumeControl"
+						height="40" 
+						showvalue="false"
+						showcurrentvalue="true"
+						minvalue="0"
+						maxvalue="100"
+						showrange="false" 
+						align="center">
+						
+						<handler name="onvalue" args="v">
+							var s = "sendRequest('setVolume','"+v+"','"+gReadableText.speechAction+"')";
+							lz.Browser.loadJS(s);
+						</handler>
+					</vslider>
+			</view>
+			
+			<view name="gap3" x="${parent.volumeController.x+parent.volumeController.width}" width="16" valign="middle" visible="${parent.volumeController.visible}"/>
+
+			<basebutton name="stopreader" stretches="both" height="40" width="37"
+		                resource="toolbar_stopreader_btn" clickable="true"
+		                x="${parent.gap3.x+parent.gap3.width}"
+		                visible="${canvas.readable}" valign="middle">
+		
+		
+				<handler name="onclick">
+					lz.Timer.removeTimer(gController.dcheckTextPlayed);
+					stopTextReading(gReadableText);
+					gReadableText.isplaying = false;
+					//gReadableText.stopReading(false);
+				</handler>
+		
+			</basebutton>
+			<view name="stopreader_btn_shadow" tintcolor="0x000000" resource="qButtonShadow" x="${parent.stopreader.x+6}"
+        	  opacity="0.5" visible="${parent.stopreader.visible}"
+        	  width="37" height="43" stretches="both">
+				<handler name="onvisible">
+					if(this.visible){
+						this.sendToBack();
+					}
+				</handler>
+			</view>
+			
+			<view name="gap4" x="${parent.stopreader_btn_shadow.x+parent.stopreader_btn_shadow.width}" width="16" valign="middle" visible="${parent.stopreader_btn_shadow.visible}"/>
+
+			<!-- The tool to control the TTS speed -->
+			<view name="speedController" height="60" x="${parent.gap4.x+parent.gap4.width}" y="${parent.volumeController.y}"
+						  valign="middle" visible="${gController.hasTTSspeed &amp;&amp; parent.stopreader.visible}">
+				<simplelayout axis="y" spacing="2"/>
+					<text name="speedControllerText" fontsize="9" height="10" fontstyle="bold">Speed</text>
+					<vslider id="speedControl"
+						height="40" 
+						showvalue="false"
+						showcurrentvalue="true"
+						minvalue="0"
+						maxvalue="100"
+						sticktostepvalue="true"
+						showrange="false" 
+						align="center">
+						
+						<handler name="onvalue" args="v"><![CDATA[
+							if(v==0 ) {
+								classroot.setAttribute('selectedSpeedVal','S');
+							}
+							else if(v==50 ){
+								classroot.setAttribute('selectedSpeedVal','M');
+							}
+							else if(v==100 ){
+								classroot.setAttribute('selectedSpeedVal','F');
+							}
+							if(v==0 || v==50 || v==100){
+								if(gReadableText.isplaying && gReadableText.isReadable && 
+									gReadableText.clickable && gReadableText.currentText.length > 0) {
+			
+									gReadableText.read(gReadableText.currentText,false,gReadableText.refCardReadAloud);
+								}
+							}
+							]]>
+						</handler>
+					
+					</vslider>
+			</view>
+			
+		</view>
+		
+    </class>
+
+</library>

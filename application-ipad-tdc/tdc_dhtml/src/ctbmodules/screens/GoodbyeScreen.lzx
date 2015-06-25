@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<library>
+	<!--<dataset name="goodbyeDs" 
+			 type="http"
+	         queuerequests="true" 
+	         querytype="get"
+	         timeout="10000" 
+	         onerror="exitRequest._dosomething(this)" 
+	         ontimeout="exitRequest._dosomething(this)" 
+	         ondata="exitRequest._dosomething(this)" />-->
+
+	<attribute name="utilityAction" type="string" value="UtilityAction"/>         
+	         
+	<node id="exitRequest">
+		<method name="_dosomething" args="ds" >
+			exitRequest.exit();
+		</method>
+		
+		<method name="exit">
+        	Debug.write("On Goodbye Screen");
+        	//gMusicPlayer.stop();
+	    	//var getUrl = lz.Browser.getInitArg( 'servletUrl' ) + '/UtilityServlet.do?method=exit';
+	    	var base = "http://192.168.15.33:12345/servlet/fixed";
+	    	var getUrl = base + '/UtilityServlet.do?method=exit';
+			//goodbyeDs.setAttribute('src', getUrl);
+			//goodbyeDs.doRequest();
+			
+			var s = "sendRequest('exit','exit','"+utilityAction+"')";
+			lz.Browser.loadJS(s); 
+		</method>
+	</node>
+	<handler name="onvisible">
+			if(this.visible){
+			//console.log("onvisible of goodbye acreen");
+			sendRequest('exit','exit','UtilityAction');
+		}
+	</handler>
+
+    <class name="GoodbyeScreen">
+		
+	<handler name="onvisible">
+			if(this.visible){
+			sendRequest('exit','exit','UtilityAction');
+		}
+	</handler>
+	<method name="isTimeout">
+		if(gController.isWV == true || gController.isWV == 'true' || gController.isVANILLA == true || gController.isVANILLA == 'true'){
+			if(gController.testTimeout == true){
+				this.timeoutText.setAttribute('visible', true);
+				this.goodbye.setAttribute('visible', false);
+			}else{
+				this.timeoutText.setAttribute('visible', false);
+				this.goodbye.setAttribute('visible', true);
+			}
+		}	
+	</method>
+		<text font="Arial" fontsize="24" height="36" align="center" valign="middle" fgcolor="white" name="goodbye" visible="true">Good-bye!</text> 
+		<text font="Arial" fontsize="24" height="36" align="center" valign="middle" fgcolor="white" name="timeoutText" visible="false">Your test session has timed out and will now close.</text> 
+		
+	</class>
+</library>

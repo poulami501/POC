@@ -1,0 +1,7 @@
+{
+    "ROMLocation": "calc://TI-30/bin/ti30mv.h84state",
+    "FaceplateLocation": "calc://TI-30/images/TI_30X_MV_ExamCalcs_SteelBlue.svg",
+    "FaceplateMobileLocation": "calc://TI-30/images/TI-30XS_SmartView_Standard_Touch.svg",
+    "KeyMappingFile": "",
+    "KeyHistBufferLength": "10"
+}

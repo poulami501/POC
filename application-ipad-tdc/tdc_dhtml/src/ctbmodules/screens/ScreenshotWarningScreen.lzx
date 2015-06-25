@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<library>
+	
+	<class name="ScreenshotWarningScreen">
+		<attribute name="font" value="CTB"/>
+		
+		<simplelayout axis="y" spacing="0"/>
+		
+			<text fontsize="24" resize="true" fgcolor="white">
+            	WARNING
+        	</text>
+        	<view name="secInfo" bgcolor="white" width="550" 
+        	x="5" height="105" stretches = "height">
+        		<simplelayout axis="y" spacing="5"/>
+        		<text name="blank" height="3" x="5" fontsize="18"/>
+        		<text name="secNotes" width="530" x="5" multiline="true" fontsize="15">
+            		You have taken a screenshot during the test; this is a violation of the test rules. You cannot proceed with the test.
+            	</text>
+        	</view>
+	</class>
+</library>

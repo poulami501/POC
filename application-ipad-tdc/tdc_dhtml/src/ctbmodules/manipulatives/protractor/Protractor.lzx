@@ -1,0 +1,124 @@
+<library>
+
+    <include href="../BaseManipulative.lzx"/>
+    <include href="protractorResources.lzx"/>
+    <include href="../dragrotateresize/MovementLimiter-Mixin.lzx" />
+    <include href="../dragrotateresize/ControlHandle.lzx" />
+
+    <class name="Protractor" extends="BaseManipulative"
+           with="MovementLimiter"
+           resource="protractorBackground_rsrc"
+           clickable="true" showhandcursor="true">
+
+        <handler name="onmousedown">
+            this.bringToFront();
+        </handler>
+
+        <handler name="ondata" args="data"><![CDATA[
+			
+            var hasstate = false;
+
+            if(data && data.attributes){
+                for (var i in data.attributes) {
+                    hasstate = true;
+                    break;
+                }
+            }
+            if (data && hasstate) {
+                this.setAttribute ('rotation', Number(data.getAttr ('rotation')));
+
+                this.setAttribute ('x', Number(data.getAttr ('x')));
+                this.setAttribute ('y', Number(data.getAttr ('y')));
+                // if restoring manipulative with Scratchpad open - need Scratchpad to be top window
+                /* if(gScratchpad.visible){
+                    gScratchpad.bringToFront();
+                } */
+            } else {
+                this.setAttribute ('rotation', 0);
+
+                this.setAttribute ('x', (gManipulatives.width - this.width)/2);
+                this.setAttribute ('y', (gManipulatives.height - this.height)/2);
+
+                //save defaults in data
+                if (data) {
+					this.storeCurrentPosition();
+                }
+           	}
+        ]]></handler>
+
+		<method name="storeCurrentPosition">
+			var data = datapath.p;
+            data.setAttr ('rotation', this.rotation);
+            data.setAttr ('x', this.x);
+            data.setAttr ('y', this.y);			
+		</method>
+
+
+        <method name="isValidRotation" args="controlView, rot">
+            updateMarkerPosition(this.grabber, x, y, rot, 0);
+            return this.checkLocation (controlView, false);
+        </method>
+
+        <method name="isValidLocation" args="controlView">
+            this.collisionmarker.setAttributeRelative ('x', controlView);
+            this.collisionmarker.setAttributeRelative ('y', controlView);
+            updateMarkerPosition(this.grabber, x, y, rotation, 0);
+            return this.checkLocation (controlView, true);
+        </method>
+
+
+        <ControlHandle resource="protractorMarks_rsrc" 
+            controlviewname="gDragRotateResizer"
+            target="$once{parent}"
+            controls="d">
+			<handler name="onmousedown">
+                classroot.bringToFront();
+            </handler>
+            <handler name="onmouseup">
+				classroot.storeCurrentPosition(); 
+            </handler>
+		</ControlHandle>
+
+        <ControlHandle name="grabber"
+            resource="protractorHandle_rsrc"
+            y="97" align="center"
+            controlviewname="gDragRotateResizer"
+            target="$once{parent}"
+            controls="d">
+
+            
+            <handler name="onmousedown">
+                classroot.bringToFront();
+            </handler>
+            <handler name="onmouseup">
+				classroot.storeCurrentPosition(); 
+            </handler>
+            <handler name="oninit">
+                var elm = this.getDisplayObject();
+                elm.setAttribute("id","protractor");
+            </handler>
+        </ControlHandle>
+
+
+        <ControlHandle resource="protractorRotator_rsrc"
+            y="110" x="${classroot.width-65}"
+            controlviewname="gDragRotateResizer"
+            target="$once{parent}"
+            controls="r"
+            onmousedown="controlview.setActiveItem(classroot, this)">
+            <!-- respond to click on the small arrows in the resource -->
+            <handler name="onshortclick">
+                if (containsMousePos ({x:6, y:0, w:7, h:6}, classroot)) {
+                    this.controlview.rotateBy (-1);
+                } else if (containsMousePos ({x:6, y:16, w:7, h:6}, classroot)) {
+                    this.controlview.rotateBy (+1);
+                }
+            </handler>
+			<handler name="onmouseup">
+				classroot.storeCurrentPosition();          
+			</handler>		
+        </ControlHandle>
+
+    </class>
+
+</library>
